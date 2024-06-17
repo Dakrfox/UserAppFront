@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PrimaryBtn, SecondaryBtn, ghostBtn } from '@/components/ButtonComponent';
 import CardComponent from '@/components/CardComponent';
 import InputComponent from '@/components/InputComponent';
@@ -9,6 +9,7 @@ import ContainerComponent from '@/components/ContainerComponent';
 
 
 export default function PruebaComponents() {
+    const [text, setText] = useState('');
     return (
         <>
         <MenuComponent >
@@ -60,6 +61,7 @@ export default function PruebaComponents() {
             </ContainerComponent>
             <CardComponent 
                 title="Title" description="Description" image="https://img.logoipsum.com/243.svg"/>
+                {}
         </>
     )
 }

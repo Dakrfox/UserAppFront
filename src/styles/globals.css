@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .sidebar {
     /* ... other styles */
     width: 250px; /* Initial width */

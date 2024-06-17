@@ -1,21 +1,31 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { UserContext } from '../context/UserContext';
+import { UserContext } from "../context/UserContext";
+import { InputComponent, InputSubmit } from "@/components/InputComponent";
+import {
+  PrimaryBtn,
+  SecondaryBtn,
+  ghostBtn,
+} from "@/components/ButtonComponent";
+import CardComponent from "@/components/CardComponent";
+import ContainerComponent from "@/components/ContainerComponent";
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
   const { user } = useContext(UserContext);
+  console.log(email, password);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
@@ -25,31 +35,52 @@ export default function Login() {
         // Handle successful login
         const token = data.token;
 
-        localStorage.setItem('authToken', token);
-        console.log('Token stored in localStorage:', token);
-        router.push('/User');
-
+        localStorage.setItem("authToken", token);
+        console.log("Token stored in localStorage:", token);
+        router.push("/User");
       } else {
         // Handle login failure
-        console.error('Login failed');
+        console.error("Login failed");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
-  console.log(user)
+  console.log(user);
   return (
-    <div className="login-container">
-      <h2>Welcome to the Login Page</h2>
-      
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit">Log In</button>
-        <Link href="/Register">Register</Link>
-      </form>
-    </div>
-  )
+    <ContainerComponent className="flex justify-center items-center h-screen text-center">
+      <CardComponent
+        className="max-w-md"
+        title="Welcome Back!"
+        image="https://img.logoipsum.com/243.svg"
+      >
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="email" className="">Login</label>
+          <InputComponent
+            id="email"
+            type="email"
+            placeholder="Email"
+            className="max-w-md mt-3 mb-2"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <InputComponent
+            id="password"
+            type="password"
+            placeholder="Password"
+            className="max-w-md mt-2 mb-2"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <InputSubmit value="Login" className="max-w-md mt-2 mb-2" />
+          <div className="text-center w-full  mt-2 mb-2">
+            <Link
+              className="text-blue-500 text-sm text-center w-full"
+              href="/Register"
+            >
+              Create an account
+            </Link>
+          </div>
+        </form>
+      </CardComponent>
+    </ContainerComponent>
+  );
 }

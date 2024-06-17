@@ -2,10 +2,10 @@ import React, { createContext, useContext, useState } from "react";
 import { ChevronFirst, ChevronLast, MoreVertical } from "lucide-react";
 const sidebarContext = createContext();
 export default function MenuComponent({ children }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <aside className="h-screen max-w-md">
+      <aside className="h-screen max-w-md fixed">
         <nav className="h-full inline-flex flex-col bg-white border-r shadow-sm">
           <div className="p-4 pb-2 flex justify-between items-center">
             <img

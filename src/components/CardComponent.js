@@ -1,9 +1,9 @@
 import React from 'react';
 
 
-export default function CardComponent({ title, description, image }) {
+export default function CardComponent({ title, description, image, children, className }) {
     return (
-        <div className="bg-white rounded-lg p-5 shadow-md border border-gray-200 m-10">
+        <div className={`w-full ${className} p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8`}>
         {image && (
           <img
             src={image}
@@ -13,7 +13,8 @@ export default function CardComponent({ title, description, image }) {
         )}
   
         <h2 className="font-bold text-lg mb-2">{title}</h2>
-        <p className="text-gray-600">{description}</p>
+        <p className="text-gray-600 text-xs mb-2">{description}</p>
+        {children}
       </div>
     );
 }

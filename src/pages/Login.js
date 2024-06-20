@@ -16,7 +16,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { user } = useContext(UserContext);
-  console.log(email, password);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +35,6 @@ export default function Login() {
         const token = data.token;
 
         localStorage.setItem("authToken", token);
-        console.log("Token stored in localStorage:", token);
         router.push("/User");
       } else {
         // Handle login failure
@@ -46,7 +44,6 @@ export default function Login() {
       console.error("Error:", error);
     }
   };
-  console.log(user);
   return (
     <ContainerComponent className="flex justify-center items-center h-screen text-center">
       <CardComponent
@@ -60,6 +57,7 @@ export default function Login() {
             id="email"
             type="email"
             placeholder="Email"
+            value={email}
             className="max-w-md mt-3 mb-2"
             onChange={(e) => setEmail(e.target.value)}
           />

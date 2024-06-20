@@ -23,6 +23,8 @@ function InputComponent(props) {
           type={`${props.type}`}
           placeholder={`${props.placeholder}`}
           onChange={props.onChange}
+          value={props.value}
+          disabled={props.disabled}
         />
       </div>
     </>

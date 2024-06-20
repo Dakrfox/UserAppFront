@@ -29,7 +29,6 @@ export default function Register() {
         const token = data.token;
 
         localStorage.setItem("authToken", token);
-        console.log("Token stored in localStorage:", token);
         router.push("/User");
       } else {
         // Handle login failure
@@ -41,7 +40,6 @@ export default function Register() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, username, password);
     try {
       const response = await fetch("http://localhost:3000/users", {
         method: "POST",
@@ -50,7 +48,6 @@ export default function Register() {
         },
         body: JSON.stringify({ email, username, password }),
       });
-      console.log(response.ok);
       if (response.ok) {
         login(e);
       } else {

@@ -32,6 +32,13 @@ export default function User() {
   const [updateProfile, setUpdateProfile] = useState(false);
   const [updatePassword, setUpdatePassword] = useState(false);
 
+
+  const [nameChange, setNameChange] = useState('n');
+
+  const handleInputChange = (event, setter) => {
+    setter(event.target.value);
+  };
+
   useEffect(() => {
     const token = window.localStorage.getItem("authToken");
     try {
@@ -54,11 +61,14 @@ export default function User() {
             const data = await response.json();
             setUserData(data);
             setUser(data);
+            setNameChange(data.email);
+
+            console.log(data.name);
           } else {
-            console.error("Error:", response.statusText);
+            console.error("Error  aasdaasd:", response.statusText);
           }
         } catch (error) {
-          console.error("Error:", error);
+          console.error("Error asdasdasd:", error);
         }
       };
       fetchData();
@@ -82,7 +92,12 @@ export default function User() {
     localStorage.removeItem("authToken");
     Router.push("/Login");
   };
+  const handleCancel = () => {
+    setNameChange(userData.email);
+    setUpdateProfile(false);
+  };
 
+  
   return (
     <>
       <div className="flex min-h-full flex-col justify-between">
@@ -225,8 +240,10 @@ export default function User() {
                       <InputComponent
                         id="123312213"
                         type="text"
-                        value={"Nicolas Martinez Herrera"}
+                        placeholder=""
                         disabled={updateProfile ? false : true}
+                        value={updateProfile ? nameChange : userData.email}
+                        onChange={(event) => handleInputChange(event, setNameChange)}
                       ></InputComponent>
                     </div>
                     <div className="text-lg mb-2  ">
@@ -249,16 +266,15 @@ export default function User() {
                         id="email"
                         type="email"
                         placeholder="Email"
-                        value={""}
-                        onChange={""}
-                        disabled={updateProfile ? false : true}
+                        disabled={updateProfile ? false : true} 
+                        
                       ></InputComponent>
                     </div>
                     <div className="text-lg mb-2  ">
                       <label>Phone</label>
                       <InputComponent
-                        value={"+57 (321) 456-7890"}
-                        disabled={updateProfile ? false : true}
+                        value={""}
+                        disabled={false}
                       ></InputComponent>
                     </div>
                     {updateProfile ? (
@@ -267,6 +283,7 @@ export default function User() {
                           value={"Cancel"}
                           className={"mt-4 mb-4 mr-2"}
                           disabled={updateProfile ? false : true}
+                          onClick={handleCancel}
                         ></SecondaryBtn>
                         <PrimaryBtn
                           value={"Save"}

@@ -1,8 +1,8 @@
 "use client";
-import { useRouter, Redirect } from "next/router";
+import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "next/link"; // Import the Link component
 import jwt from "jsonwebtoken";
+import getUser from "@/api/GetUser";
 //context
 import { UserContext } from "../context/UserContext";
 //icons
@@ -16,6 +16,9 @@ import ContainerComponent from "@/components/ContainerComponent";
 import CardComponent from "@/components/CardComponent";
 import MenuComponent, { MenuItem } from "@/components/MenuComponent";
 
+
+import dobToAge from "dob-to-age";
+
 import {
   PrimaryBtn,
   SecondaryBtn,
@@ -26,78 +29,140 @@ import { InputComponent } from "@/components/InputComponent";
 import { stringify } from "postcss";
 export default function User() {
   const { user, setUser } = useContext(UserContext);
-  const secretKey = "miClaveSecreta";
   const Router = useRouter();
   const [userData, setUserData] = useState({});
   const [updateProfile, setUpdateProfile] = useState(false);
   const [updatePassword, setUpdatePassword] = useState(false);
-
-
-  const [nameChange, setNameChange] = useState('n');
+  const [password123, setPassword123] = useState('');
+  const [passwordConfirm123, setPasswordConfirm123] = useState('');
+  const [updateUser, setUpdateUser] = useState({
+    name: "",
+    username: "",
+    email: "",
+    birthdate: "",
+    age: "",
+    phone: "",
+  });
 
   const handleInputChange = (event, setter) => {
-    setter(event.target.value);
+    switch (event.target.id) {
+      case "123312213":
+        setter({ ...updateUser, name: event.target.value });
+        break;
+      case "username123":
+        setter({ ...updateUser, username: event.target.value });
+        break;
+      case "email123":
+        setter({ ...updateUser, email: event.target.value });
+        break;
+      case "phone123":
+        setter({ ...updateUser, phone: event.target.value });
+        break;
+        case "password123":
+        setter({ ...updateUser, password: event.target.value });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleInputChangeDate = (event) => {
+    const selectedDate = new Date(event.target.value);
+    const formattedDate = selectedDate.toISOString().slice(0, 10);
+    setUpdateUser({ ...updateUser, birthdate: formattedDate });
   };
 
   useEffect(() => {
-    const token = window.localStorage.getItem("authToken");
-    try {
-      const decoded = jwt.verify(token, secretKey);
+    const fetchUser = async () => {
+      const data = await getUser();
+      setUserData(data);
+      setUser(data);
+      setUpdateUser({
+        name: data.name,
+        username: data.username,
+        email: data.email,
+        birthdate: data.birthdate?.substring(0, 10),
+        age: data.age,
+        phone: data.phone,
+      });
+    };
 
-      const userId = decoded.userId;
-      const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:3000/users/${userId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `${token}`,
-              },
-            }
-          );
-          if (response.ok) {
-            const data = await response.json();
-            setUserData(data);
-            setUser(data);
-            setNameChange(data.email);
-
-            console.log(data.name);
-          } else {
-            console.error("Error  aasdaasd:", response.statusText);
-          }
-        } catch (error) {
-          console.error("Error asdasdasd:", error);
-        }
-      };
-      fetchData();
-    } catch (error) {
-      if (error.name === "TokenExpiredError") {
-        console.error("Token expired");
-        {
-          Router.push("/Login");
-        }
-      } else {
-        console.error("Invalid token:", error.message);
-        {
-          Router.push("/Login");
-        }
-        // Handle other token errors (e.g., redirect to login)
-      }
-    }
+    fetchUser();
   }, []);
 
   const onhandleLogout = () => {
     localStorage.removeItem("authToken");
     Router.push("/Login");
   };
-  const handleCancel = () => {
-    setNameChange(userData.email);
+  const onHandleCancel = () => {
+    setUpdateUser({
+      name: userData.name,
+      username: userData.username,
+      email: userData.email,
+      birthdate: userData.birthdate.substring(0, 10),
+      age: userData.age,
+      phone: userData.phone,
+    });
     setUpdateProfile(false);
   };
+  const onHandleUpdate = async (userUpdateData) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const decoded = jwt.verify(token, "miClaveSecreta");
+      const userId = decoded.userId;
+      console.log(userUpdateData);
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify(userUpdateData),
+      });
 
-  
+      if (response.ok) {
+        setUpdateProfile(false);
+        
+      } else {
+        console.error("Error:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const onHandleUpdatePassword = async () => {
+    try {
+      if (password123 !== passwordConfirm123) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+      const token = localStorage.getItem("authToken");
+      const decoded = jwt.verify(token, "miClaveSecreta");
+      const userId = decoded.userId;
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({"password": password123}),
+      });
+
+      if (response.ok) {
+        setUpdatePassword(false);
+      } else {
+        console.error("Error:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const onHandleCancelPwd = () => {
+    setPassword123('');
+    setPasswordConfirm123('');
+    setUpdatePassword(false);
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-col justify-between">
@@ -139,8 +204,14 @@ export default function User() {
                 className="text-left h-full pt-0 mt-0"
                 title={
                   <div className="w-full flex justify-between items-center m-0">
-                    <h2 className="mb-2">Security</h2>{" "}
-                    <div className="icon cursor-pointer">
+                    <h2 className="mb-2">User Information</h2>
+                    <div
+                      className={`icon cursor-pointer inline-flex items-center justify-around ${
+                        updatePassword && "hidden"
+                      }`}
+                      onClick={() => setUpdatePassword(!updatePassword)}
+                    >
+                      <label className="mr-2 cursor-pointer">Edit </label>
                       <FaRegEdit />
                     </div>
                   </div>
@@ -150,19 +221,45 @@ export default function User() {
                 <div className="text-lg mb-2">
                   <label>Password</label>
                   <InputComponent
-                    placeholder="**************"
-                    disabled={true}
+                    id="password123"
                     type="password"
+                    placeholder="**************"
+                    disabled={updatePassword ? false : true}
+                    value={(updatePassword ? password123 : "")}
+                    onChange={(e) => setPassword123(e.target.value)}
+                    {...console.log(password123)}
                   ></InputComponent>
                 </div>
                 <div className="text-lg mb-2  ">
                   <label>Confirm Password</label>
                   <InputComponent
+                    id="passwordConfirm123"
                     placeholder="**************"
-                    disabled={true}
+                    disabled={updatePassword ? false : true}
                     type="password"
+                    value={(updatePassword ? passwordConfirm123 : "")}
+                    onChange={(e) => setPasswordConfirm123(e.target.value)}
+                    {...console.log(passwordConfirm123)}
                   ></InputComponent>
                 </div>
+                {updatePassword ? (
+                      <div className="flex items-center ">
+                        <SecondaryBtn
+                          value={"Cancel"}
+                          className={"mt-4 mb-4 mr-2"}
+                          disabled={updatePassword ? false : true}
+                          onClick={onHandleCancelPwd}
+                        ></SecondaryBtn>
+                        <PrimaryBtn
+                          value={"Save"}
+                          className={"mt-4 mb-4 ml-2"}
+                          disabled={updatePassword ? false : true}
+                          onClick={onHandleUpdatePassword}
+                        ></PrimaryBtn>
+                      </div>
+                    ) : (
+                      ""
+                    )}
               </CardComponent>
             </div>
             <div className="min-h-300 lg:row-span-2 lg:col-start-1 lg:row-start-3 ">
@@ -211,11 +308,14 @@ export default function User() {
               <CardComponent
                 title={
                   <div className="w-full flex justify-between items-center m-0">
-                    <h2 className="mb-2">Profile Information</h2>
+                    <h2 className="mb-2">User Information</h2>
                     <div
-                      className="icon cursor-pointer"
+                      className={`icon cursor-pointer inline-flex items-center justify-around ${
+                        updateProfile && "hidden"
+                      }`}
                       onClick={() => setUpdateProfile(!updateProfile)}
                     >
+                      <label className="mr-2 cursor-pointer">Edit </label>
                       <FaRegEdit />
                     </div>
                   </div>
@@ -240,41 +340,72 @@ export default function User() {
                       <InputComponent
                         id="123312213"
                         type="text"
-                        placeholder=""
+                        placeholder="Name"
                         disabled={updateProfile ? false : true}
-                        value={updateProfile ? nameChange : userData.email}
-                        onChange={(event) => handleInputChange(event, setNameChange)}
+                        value={updateUser.name}
+                        onChange={(event) =>
+                          handleInputChange(event, setUpdateUser)
+                        }
                       ></InputComponent>
                     </div>
                     <div className="text-lg mb-2  ">
                       <label>Username</label>
                       <InputComponent
-                        value={userData.username}
+                        id="username123"
+                        type="email"
+                        placeholder="Username"
                         disabled={updateProfile ? false : true}
+                        value={updateUser.username}
+                        onChange={(event) =>
+                          handleInputChange(event, setUpdateUser)
+                        }
                       ></InputComponent>
                     </div>
                     <div className="text-lg mb-2  ">
                       <label>Email</label>
                       <InputComponent
-                        value={userData.email}
+                        id="email123"
+                        type="email"
+                        placeholder="Email"
                         disabled={updateProfile ? false : true}
-                                              ></InputComponent>
+                        value={updateUser.email}
+                        onChange={(event) =>
+                          handleInputChange(event, setUpdateUser)
+                        }
+                      ></InputComponent>
+                    </div>
+                    <div className="text-lg mb-2  ">
+                      <label>Birthday</label>
+                      <InputComponent
+                        id="birthdate123"
+                        type="date"
+                        placeholder="DD/MM/YYYY"
+                        disabled={updateProfile ? false : true}
+                        value={updateUser.birthdate}
+                        onChange={(event) => handleInputChangeDate(event)}
+                      ></InputComponent>
                     </div>
                     <div className="text-lg mb-2  ">
                       <label>Age</label>
                       <InputComponent
-                        id="email"
-                        type="email"
-                        placeholder="Email"
-                        disabled={updateProfile ? false : true} 
-                        
+                        id="age123"
+                        type="text"
+                        placeholder="Age"
+                        disabled={true}
+                        value={dobToAge(updateUser.birthdate)}
                       ></InputComponent>
                     </div>
                     <div className="text-lg mb-2  ">
                       <label>Phone</label>
                       <InputComponent
-                        value={""}
-                        disabled={false}
+                        id="phone123"
+                        type="text"
+                        placeholder="Phone"
+                        disabled={updateProfile ? false : true}
+                        value={updateUser.phone}
+                        onChange={(event) =>
+                          handleInputChange(event, setUpdateUser)
+                        }
                       ></InputComponent>
                     </div>
                     {updateProfile ? (
@@ -283,17 +414,16 @@ export default function User() {
                           value={"Cancel"}
                           className={"mt-4 mb-4 mr-2"}
                           disabled={updateProfile ? false : true}
-                          onClick={handleCancel}
+                          onClick={onHandleCancel}
                         ></SecondaryBtn>
                         <PrimaryBtn
                           value={"Save"}
                           className={"mt-4 mb-4 ml-2"}
                           disabled={updateProfile ? false : true}
                           onClick={() => {
-                            alert("Saved");
+                            onHandleUpdate(updateUser);
                           }}
-                          w
-                        ></PrimaryBtn>
+                        ></PrimaryBtn> 
                       </div>
                     ) : (
                       ""

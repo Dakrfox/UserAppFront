@@ -54,5 +54,21 @@ const onHandleUpdatePassword = async () => {
     }
   };
 
-
-  export { onHandleUpdate, onHandleUpdatePassword };
+   const onHandleUpdateRole = async () => {
+     const token = localStorage.getItem("authToken");
+     const decoded = jwt.verify(token, "miClaveSecreta");
+     const userId = decoded.userId;
+     const response = await fetch(`http://localhost:3000/users/${userId}`, {
+       method: "PATCH",
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: `${token}`,
+       },
+       body: JSON.stringify({ rol: "admin" }),
+     });
+     if (response.ok) {
+       return true;
+     } else {
+       return false;}
+   }
+  export { onHandleUpdate, onHandleUpdatePassword, onHandleUpdateRole };

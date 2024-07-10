@@ -4,6 +4,11 @@ import React, { useContext, useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
 import getUser from "@/api/GetUser";
 import { softDelete, hardDelete } from "@/api/DeleteUser";
+import {
+  onHandleUpdate,
+  onHandleUpdatePassword,
+  onHandleUpdateRole,
+} from "@/api/UpdateUser";
 //context
 import { UserContext } from "../context/UserContext";
 //icons
@@ -43,7 +48,9 @@ export default function User() {
     age: "",
     phone: "",
   });
-
+  const [rol, setRol] = useState("");
+  const [lastLogin, setLastLogin] = useState("");
+  const [updatedAt, setUpdatedAt] = useState(new Date());
   const handleInputChange = (event, setter) => {
     switch (event.target.id) {
       case "123312213":
@@ -85,9 +92,16 @@ export default function User() {
         age: data.age,
         phone: data.phone,
       });
+      setRol(data.rol);
+      setUpdatedAt(data.updated_at);
     };
 
     fetchUser();
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      const TSlogin = jwt.decode(storedToken).TimeStamp;
+      setLastLogin(new Date(TSlogin));
+    }
   }, []);
 
   const onhandleLogout = () => {
@@ -178,6 +192,15 @@ export default function User() {
       alert("Error al borrar usuario");
     }
   };
+  const onHandleAdminRole = async () => {
+    const userRoleFlag = await onHandleUpdateRole();
+    if (userRoleFlag) {
+      alert("Rol actualizado");
+      setRol("admin");
+    } else {
+      alert("Error al actualizar rol");
+    }
+  };
   return (
     <>
       <div className="flex min-h-full flex-col justify-between">
@@ -201,15 +224,12 @@ export default function User() {
                 }
                 body="Body 5"
               >
-                <h2>Session time: {"2 hrs 15 min 3 sec"}</h2>
-                <h2>
-                  Last login:{" "}
-                  {"12/12/1212 12:12:12 PM" /*new Date(userData.lastLogin)*/}
-                </h2>
-                <h2>
-                  last update:{" "}
-                  {"12/12/1212 12:12:12 PM" /*new Date(userData.lastLogin)*/}
-                </h2>
+                
+                <h2 className="mb-2 text-lg text-left underline">Login:</h2> <p>{"" + lastLogin}</p>{" "} <hr />
+                <h2 className="mb-2 text-lg text-left underline">User Created at: </h2>
+                {"" + new Date(userData.created_at)}<hr />
+                <h2 className="mb-2 text-lg text-left underline">User last Updated at:</h2>
+                {"" + new Date(userData.updated_at)}<hr />
               </CardComponent>
             </div>
             <div className="min-h-300 lg:row-span-2">
@@ -285,13 +305,17 @@ export default function User() {
                 }
                 body="Body 5"
               >
-                <h2>
-                  Role: {user.rol === "admin" ? "Administrator" : "Standard"}
-                </h2>
+                <h2>Role: {rol === "admin" ? "Administrator" : "Standard"}</h2>
                 <PrimaryBtn
                   className="mt-4"
                   value="Request admin Role"
+                  onClick={onHandleAdminRole}
+                  disabled={userData.rol === "admin" ? true : false}
                 ></PrimaryBtn>
+                {console.log(rol, userData.rol)}
+                {rol === "admin"
+                  ? "if you are seen this message, it is because you already have admin role"
+                  : ""}
               </CardComponent>
             </div>
             <div className="min-h-300 lg:row-span-2 lg:col-start-2 lg:row-start-3 ">
@@ -314,8 +338,11 @@ export default function User() {
                   value="Deactivate User"
                   onClick={onHandleDeactivateUser}
                 ></PrimaryBtn>
-                <DangerBtn className="mt-4" value="Delete Account"
-                onClick={onHandleDeleteUser}></DangerBtn>
+                <DangerBtn
+                  className="mt-4"
+                  value="Delete Account"
+                  onClick={onHandleDeleteUser}
+                ></DangerBtn>
               </CardComponent>
             </div>
 

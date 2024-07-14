@@ -34,6 +34,8 @@ export default function Login() {
         // Handle successful login
         const token = data.token;
 
+        document.cookie = `token=${token}`; 
+
         localStorage.setItem("authToken", token);
         router.push("/User");
       } else {

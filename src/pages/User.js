@@ -12,10 +12,12 @@ import {
 //context
 import { UserContext } from "../context/UserContext";
 //icons
-import { HiArchiveBox } from "react-icons/hi2";
+import { TbMailCode } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 import { RiAdminLine } from "react-icons/ri";
+import { CgFileDocument } from "react-icons/cg";
+import { RiHome3Line } from "react-icons/ri";
 
 //components
 import ContainerComponent from "@/components/ContainerComponent";
@@ -81,6 +83,7 @@ export default function User() {
 
   useEffect(() => {
     const fetchUser = async () => {
+      
       const data = await getUser();
       setUserData(data);
       setUser(data);
@@ -124,7 +127,6 @@ export default function User() {
       const token = localStorage.getItem("authToken");
       const decoded = jwt.verify(token, "miClaveSecreta");
       const userId = decoded.userId;
-      console.log(userUpdateData);
       const response = await fetch(`http://localhost:3000/users/${userId}`, {
         method: "PATCH",
         headers: {
@@ -205,10 +207,9 @@ export default function User() {
     <>
       <div className="flex min-h-full flex-col justify-between">
         <MenuComponent>
-          <MenuItem icon={<HiArchiveBox size={20} />} text="Menu 1" active />
-          <MenuItem icon={<HiArchiveBox size={20} />} text="Menu 2" />
-          <MenuItem icon={<HiArchiveBox size={20} />} text="Menu 3" alert />
-          <MenuItem icon={<HiArchiveBox size={20} />} text="Menu 4" />
+          <MenuItem icon={<RiHome3Line size={20} />} text="Home"  />
+          <MenuItem icon={<CgFileDocument size={20} />} text="Documentation"  />
+          <MenuItem icon={<TbMailCode size={20} />} text="Contact Dev" />
         </MenuComponent>
 
         <ContainerComponent className=" text-center w-full p-0 box-border">
@@ -260,7 +261,6 @@ export default function User() {
                     disabled={updatePassword ? false : true}
                     value={updatePassword ? password123 : ""}
                     onChange={(e) => setPassword123(e.target.value)}
-                    {...console.log(password123)}
                   ></InputComponent>
                 </div>
                 <div className="text-lg mb-2  ">
@@ -272,7 +272,6 @@ export default function User() {
                     type="password"
                     value={updatePassword ? passwordConfirm123 : ""}
                     onChange={(e) => setPasswordConfirm123(e.target.value)}
-                    {...console.log(passwordConfirm123)}
                   ></InputComponent>
                 </div>
                 {updatePassword ? (
@@ -312,7 +311,7 @@ export default function User() {
                   onClick={onHandleAdminRole}
                   disabled={userData.rol === "admin" ? true : false}
                 ></PrimaryBtn>
-                {console.log(rol, userData.rol)}
+                
                 {rol === "admin"
                   ? "if you are seen this message, it is because you already have admin role"
                   : ""}

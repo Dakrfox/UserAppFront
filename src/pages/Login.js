@@ -30,13 +30,10 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await LoginAuth(email, password);
-    console.log(response)
     if (response.status === 200) {
-      console.log(response.status)
       succes_notify("Logged in");
       router.push("/User");
     } else {
-      console.log(response.status + 'asd')
       error_notify("Login failed");
     }
   };

@@ -9,7 +9,6 @@ export default async function LoginAuth(email, password) {
       },
       body: JSON.stringify({ email, password }),
     });
-    console.log(response)
     if (response.status === 200) {
       const data = await response.json();
       const token = data.token;

@@ -6,6 +6,8 @@ import getUser from "@/api/GetUser";
 import { softDelete, hardDelete } from "@/api/DeleteUser";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Avatar from 'react-avatar';
+
 import {
   onHandleUpdate,
   onHandleUpdatePassword,
@@ -14,12 +16,12 @@ import {
 //context
 import { UserContext } from "../context/UserContext";
 //icons
-import { TbMailCode } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 import { RiAdminLine } from "react-icons/ri";
 import { CgFileDocument } from "react-icons/cg";
 import { RiHome3Line } from "react-icons/ri";
+import { GrLinkedin } from "react-icons/gr";
 
 //components
 import ContainerComponent from "@/components/ContainerComponent";
@@ -110,13 +112,21 @@ export default function User() {
       setRol(data.rol);
       setUpdatedAt(data.updated_at);
     };
-
+    
     fetchUser();
     const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
       const TSlogin = jwt.decode(storedToken).TimeStamp;
       setLastLogin(new Date(TSlogin));
     }
+    const expToken = () => {
+      const token = localStorage.getItem("authToken");
+      const expiration_date = jwt.decode(token, "miClaveSecreta").exp;
+      setTimeout(() => {
+        onhandleLogout();
+      }, (expiration_date - Date.now() / 1000) * 1000);
+      }
+    expToken();
   }, []);
 
   const onhandleLogout = () => {
@@ -124,6 +134,7 @@ export default function User() {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     Router.push("/Login");
   };
+  
   const onHandleCancel = () => {
     setUpdateUser({
       name: userData.name,
@@ -229,10 +240,16 @@ export default function User() {
   return (
     <>
       <div className="flex min-h-full flex-col justify-between">
-        <MenuComponent>
-          <MenuItem icon={<RiHome3Line size={20} />} text="Home"  />
-          <MenuItem icon={<CgFileDocument size={20} />} text="Documentation"  />
-          <MenuItem icon={<TbMailCode size={20} />} text="Contact Dev" />
+        <MenuComponent >
+          <a href="/">
+            <MenuItem icon={<RiHome3Line size={20} />} text="Home" onClick={() => Router.push("/")} />
+          </a>
+          <a href="https://github.com/valentinocorrea/next-userapp">
+            <MenuItem icon={<CgFileDocument size={20} />} text="Documentation"  />
+          </a>
+          <a href="https://www.linkedin.com/in/dk-fox"> 
+            <MenuItem icon={<GrLinkedin  size={20} />} text="Contact Dev" />
+          </a>
         </MenuComponent>
 
         <ContainerComponent className=" text-center w-full p-0 box-border">
@@ -386,13 +403,10 @@ export default function User() {
                 }
                 className={""}
               >
-                <ContainerComponent className="flex justify-center items-center w-300 h-300">
-                  <div className="flex flex-col justify-center items-center c left h-250 w-250 radius-2xl overflow-hidden">
-                    <img
-                      className="rounded-2xl h-full w-full object-cover object-center fill"
-                      src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
-                      alt="Image Description"
-                    />
+                <ContainerComponent className="flex justify-center items-center ">
+                  <div className="flex flex-col justify-center items-center c left radius-2xl overflow-hidden">
+                    
+                    <Avatar name={updateUser.name} size={180} color="#7986cb" round={"100%"}/>
                   </div>
                   <figcaption>id: {userData._id}</figcaption>
                 </ContainerComponent>

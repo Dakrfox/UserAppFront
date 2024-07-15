@@ -6,7 +6,7 @@ import getUser from "@/api/GetUser";
 import { softDelete, hardDelete } from "@/api/DeleteUser";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Avatar from 'react-avatar';
+import Avatar from "react-avatar";
 
 import {
   onHandleUpdate,
@@ -39,18 +39,17 @@ import { InputComponent } from "@/components/InputComponent";
 export default function User() {
   const { user, setUser } = useContext(UserContext);
   const Router = useRouter();
-  const succes_notify = (message="") => {
-
+  const succes_notify = (message = "") => {
     toast.success(`${message}!`, {
-      position: "bottom-right"
+      position: "bottom-right",
     });
-  }
+  };
 
-  const error_notify = (message="") => {
+  const error_notify = (message = "") => {
     toast.error(`${message}!`, {
-      position: "bottom-right"
+      position: "bottom-right",
     });
-  }
+  };
   const [userData, setUserData] = useState({});
   const [updateProfile, setUpdateProfile] = useState(false);
   const [updatePassword, setUpdatePassword] = useState(false);
@@ -94,10 +93,9 @@ export default function User() {
     const formattedDate = selectedDate.toISOString().slice(0, 10);
     setUpdateUser({ ...updateUser, birthdate: formattedDate });
   };
- 
+
   useEffect(() => {
     const fetchUser = async () => {
-      
       const data = await getUser();
       setUserData(data);
       setUser(data);
@@ -112,7 +110,7 @@ export default function User() {
       setRol(data.rol);
       setUpdatedAt(data.updated_at);
     };
-    
+
     fetchUser();
     const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
@@ -122,10 +120,13 @@ export default function User() {
     const expToken = () => {
       const token = localStorage.getItem("authToken");
       const expiration_date = jwt.decode(token, "miClaveSecreta").exp;
-      setTimeout(() => {
-        onhandleLogout();
-      }, (expiration_date - Date.now() / 1000) * 1000);
-      }
+      setTimeout(
+        () => {
+          onhandleLogout();
+        },
+        (expiration_date - Date.now() / 1000) * 1000,
+      );
+    };
     expToken();
   }, []);
 
@@ -134,7 +135,7 @@ export default function User() {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     Router.push("/Login");
   };
-  
+
   const onHandleCancel = () => {
     setUpdateUser({
       name: userData.name,
@@ -161,14 +162,13 @@ export default function User() {
       });
 
       if (response.ok) {
-
         succes_notify("Profile Updated");
         setUpdateProfile(false);
       } else {
         error_notify("Something went wrong");
       }
     } catch (error) {
-        error_notify("Something went wrong");
+      error_notify("Something went wrong");
     }
   };
   const onHandleUpdatePassword = async () => {
@@ -196,8 +196,8 @@ export default function User() {
         error_notify("Something went wrong");
         console.error("Error:", response.statusText);
       }
-  } catch (error) {
-    error_notify("Something went wrong");
+    } catch (error) {
+      error_notify("Something went wrong");
       console.error("Error:", error);
     }
   };
@@ -240,15 +240,22 @@ export default function User() {
   return (
     <>
       <div className="flex min-h-full flex-col justify-between">
-        <MenuComponent >
+        <MenuComponent>
           <a href="/">
-            <MenuItem icon={<RiHome3Line size={20} />} text="Home" onClick={() => Router.push("/")} />
+            <MenuItem
+              icon={<RiHome3Line size={20} />}
+              text="Home"
+              onClick={() => Router.push("/")}
+            />
           </a>
           <a href="https://github.com/valentinocorrea/next-userapp">
-            <MenuItem icon={<CgFileDocument size={20} />} text="Documentation"  />
+            <MenuItem
+              icon={<CgFileDocument size={20} />}
+              text="Documentation"
+            />
           </a>
-          <a href="https://www.linkedin.com/in/dk-fox"> 
-            <MenuItem icon={<GrLinkedin  size={20} />} text="Contact Dev" />
+          <a href="https://www.linkedin.com/in/dk-fox">
+            <MenuItem icon={<GrLinkedin size={20} />} text="Contact Dev" />
           </a>
         </MenuComponent>
 
@@ -265,12 +272,18 @@ export default function User() {
                 }
                 body="Body 5"
               >
-                
-                <h2 className="mb-2 text-lg text-left underline">Login:</h2> <p>{"" + lastLogin}</p>{" "} <hr />
-                <h2 className="mb-2 text-lg text-left underline">User Created at: </h2>
-                {"" + new Date(userData.created_at)}<hr />
-                <h2 className="mb-2 text-lg text-left underline">User last Updated at:</h2>
-                {"" + new Date(userData.updated_at)}<hr />
+                <h2 className="mb-2 text-lg text-left underline">Login:</h2>{" "}
+                <p>{"" + lastLogin}</p> <hr />
+                <h2 className="mb-2 text-lg text-left underline">
+                  User Created at:{" "}
+                </h2>
+                {"" + new Date(userData.created_at)}
+                <hr />
+                <h2 className="mb-2 text-lg text-left underline">
+                  User last Updated at:
+                </h2>
+                {"" + new Date(userData.updated_at)}
+                <hr />
               </CardComponent>
             </div>
             <div className="min-h-300 lg:row-span-2">
@@ -351,7 +364,7 @@ export default function User() {
                   onClick={onHandleAdminRole}
                   disabled={userData.rol === "admin" ? true : false}
                 ></PrimaryBtn>
-                
+
                 {rol === "admin"
                   ? "if you are seen this message, it is because you already have admin role"
                   : ""}
@@ -405,8 +418,12 @@ export default function User() {
               >
                 <ContainerComponent className="flex justify-center items-center ">
                   <div className="flex flex-col justify-center items-center c left radius-2xl overflow-hidden">
-                    
-                    <Avatar name={updateUser.name} size={180} color="#7986cb" round={"100%"}/>
+                    <Avatar
+                      name={updateUser.name}
+                      size={180}
+                      color="#7986cb"
+                      round={"100%"}
+                    />
                   </div>
                   <figcaption>id: {userData._id}</figcaption>
                 </ContainerComponent>

@@ -13,19 +13,17 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const succes_notify = (message="") => {
-    
+  const succes_notify = (message = "") => {
     toast.success(`User ${message} Successfully!`, {
-      position: "bottom-right"
+      position: "bottom-right",
     });
   };
-  
-  const error_notify = (message="") => {
+
+  const error_notify = (message = "") => {
     toast.error(`${message}!`, {
-      position: "bottom-right"
+      position: "bottom-right",
     });
-  
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

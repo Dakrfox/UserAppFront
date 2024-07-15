@@ -19,19 +19,17 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const succes_notify = (message="") => {
-    
+  const succes_notify = (message = "") => {
     toast.success(`User ${message} Successfully!`, {
-      position: "bottom-right"
+      position: "bottom-right",
     });
   };
 
-  const error_notify = (message="") => {
+  const error_notify = (message = "") => {
     toast.error(`${message}!`, {
-      position: "bottom-right"
+      position: "bottom-right",
     });
-
-  }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -73,7 +71,6 @@ export default function Register() {
   return (
     <>
       <ContainerComponent className="flex justify-center items-center h-screen text-center">
-        
         <CardComponent
           className="max-w-md mt-2 mb-2"
           title={"Let's get started"}
@@ -126,11 +123,12 @@ export default function Register() {
               className="max-w-md mt-2 mb-2"
               onChange={(e) => setPassword(e.target.value)}
             />
-            
-              
-  
-            <InputSubmit value="Register" className="max-w-md mt-2 mb-2 cursor-pointer"/>
-            
+
+            <InputSubmit
+              value="Register"
+              className="max-w-md mt-2 mb-2 cursor-pointer"
+            />
+
             <ToastContainer />
             <div className="text-center w-full  mt-2 mb-2">
               <Link

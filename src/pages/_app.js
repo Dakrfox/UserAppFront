@@ -7,8 +7,8 @@ export default function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState({});
 
   return (
-      <UserContext.Provider value={{ user, setUser }}>
-        <Component {...pageProps} />
-      </UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      <Component {...pageProps} />
+    </UserContext.Provider>
   );
 }

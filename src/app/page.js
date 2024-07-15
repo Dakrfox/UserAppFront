@@ -7,34 +7,30 @@ import getUser from "@/api/GetUser";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-
 export default function Home() {
   const [userExist, setUserExist] = useState(false);
   const router = useRouter();
   const userFlag = async () => {
-    
     const user = await getUser();
     if (user) {
       setUserExist(true);
     }
-    };
-    const goToLogin = () => {
-      router.push("/Login");
-    };
-    const goToRegister = () => {
-      router.push("/Register");
-    };
-    const goToDashboard = () => {
-      router.push("/User");
-    };
+  };
+  const goToLogin = () => {
+    router.push("/Login");
+  };
+  const goToRegister = () => {
+    router.push("/Register");
+  };
+  const goToDashboard = () => {
+    router.push("/User");
+  };
 
   useEffect(() => {
     userFlag();
   }, []);
 
- 
   return (
-
     <main>
       <div className="h-300 pl-10 pr-10 grid grid-cols-2 fixed top-0 bg-white w-full">
         <div className="col-span-1">
@@ -56,19 +52,21 @@ export default function Home() {
 
           <PrimaryBtn
             className="mr-5 ml-2"
-            value={ userExist ? "Go to Dashboard" : "Register"}
-            onClick={( userExist )? goToDashboard : goToRegister}
+            value={userExist ? "Go to Dashboard" : "Register"}
+            onClick={userExist ? goToDashboard : goToRegister}
           ></PrimaryBtn>
         </div>
       </div>
       <div className="w-full bg-gray-100 pb-20 pl-20 pr-20">
         <div className="grid lg:grid-cols-3 lg:grid-rows-4 grid-cols-1  gap-4 lg:h-screen">
           <div className="lg:col-span-3 lg:row-span-2 mt-300 flex justify-center items-center">
-            <div
-              className={"text-center mt-20 bg-neutral-100 "}
-            >
-              <h1 className="text-5xl font-bold text-center text-indigo-600">Simple User Web Application</h1>
-              <h2 className="text-2xl font-bold text-center text-indigo-400">with nextjs and tailwindcss</h2>
+            <div className={"text-center mt-20 bg-neutral-100 "}>
+              <h1 className="text-5xl font-bold text-center text-indigo-600">
+                Simple User Web Application
+              </h1>
+              <h2 className="text-2xl font-bold text-center text-indigo-400">
+                with nextjs and tailwindcss
+              </h2>
             </div>
           </div>
           <div className="lg:row-span-2 lg:row-start-3 ">
@@ -131,40 +129,54 @@ export default function Home() {
           <div className="col-span-1 m-5">
             <p className="footer-description mb-2">
               Simple web app that allows you to create, read, update, delete and
-              authenticate you as a user, using JWT token, Espresso and React/Next.
+              authenticate you as a user, using JWT token, Espresso and
+              React/Next.
             </p>
             <ul className="footer-links">
               <li>
-                <a className="list underline text-md cursor-pointer" href="#">Github Code</a>
+                <a className="list underline text-md cursor-pointer" href="#">
+                  Github Code
+                </a>
               </li>
               <li>
-                <a className="list underline text-md cursor-pointer" href="#">LinkedIn dev</a>
+                <a className="list underline text-md cursor-pointer" href="#">
+                  LinkedIn dev
+                </a>
               </li>
               <li>
-                <a className="list underline text-md cursor-pointer" href="#">Buy me a coffee</a>
+                <a className="list underline text-md cursor-pointer" href="#">
+                  Buy me a coffee
+                </a>
               </li>
             </ul>
           </div>
           <div className="col-span-1 m-5 ">
             <h3 class="footer-contact-title text-xl mb-2">Contact Us</h3>
             <p class="footer-contact-info">
-              <span class="footer-contact-label">Email:{" "}</span>
-              <a className="cursor-pointer " href="mailto:business.nimh@outlook.com">business.nimh@outlook.com</a>
-            </p>
-            <p class="footer-contact-info">
-              <span class="footer-contact-label">Telegram:{" "}</span>
-              <a className="cursor-pointer" href="">@Dakrfox</a>
-            </p>
-            <p class="footer-contact-info">
-              <span class="footer-contact-label">Dev Web Page:{" "}</span>
-              <a className="cursor-pointer">
-                Go to NiCode
+              <span class="footer-contact-label">Email: </span>
+              <a
+                className="cursor-pointer "
+                href="mailto:business.nimh@outlook.com"
+              >
+                business.nimh@outlook.com
               </a>
+            </p>
+            <p class="footer-contact-info">
+              <span class="footer-contact-label">Telegram: </span>
+              <a className="cursor-pointer" href="">
+                @Dakrfox
+              </a>
+            </p>
+            <p class="footer-contact-info">
+              <span class="footer-contact-label">Dev Web Page: </span>
+              <a className="cursor-pointer">Go to NiCode</a>
             </p>
           </div>
         </div>
         <div>
-          <p className="footer-copyright text-center">Developer: Ing Nicolas Martinez Herrera </p>
+          <p className="footer-copyright text-center">
+            Developer: Ing Nicolas Martinez Herrera{" "}
+          </p>
         </div>
       </footer>
     </main>

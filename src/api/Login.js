@@ -1,6 +1,4 @@
-
 export default async function LoginAuth(email, password) {
-  
   try {
     const response = await fetch("http://localhost:3000/login", {
       method: "POST",
@@ -14,13 +12,11 @@ export default async function LoginAuth(email, password) {
       const token = data.token;
       document.cookie = `token=${token}`;
       localStorage.setItem("authToken", token);
-    }else{
-      
-      return response
+    } else {
+      return response;
     }
     return response;
   } catch (error) {
     console.error(error);
-    
   }
 }

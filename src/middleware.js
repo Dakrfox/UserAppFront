@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 export function middleware(req) {
   // Extract the authentication token from the request cookies
   const authToken = req.cookies.get("token");
-  
+
   // Extract the pathname (path without query parameters) from the requested URL.
   const url = req.nextUrl.pathname;
 

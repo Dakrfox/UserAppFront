@@ -11,7 +11,7 @@ const softDelete = async () => {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("authToken")}`,
       },
-    }
+    },
   );
   if (response.ok) {
     return true;
@@ -31,7 +31,7 @@ const hardDelete = async () => {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("authToken")}`,
       },
-    }
+    },
   );
   if (response.ok) {
     return true;

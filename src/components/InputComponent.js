@@ -42,6 +42,7 @@ function InputSubmit(props) {
         leading-6 text-white shadow-sm hover:bg-indigo-500 
         focus-visible:outline focus-visible:outline-2 
         focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+        ${props.className}
                 `}
           id={`${props.id}`}
           type={`submit`}

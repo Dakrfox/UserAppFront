@@ -4,6 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
 import getUser from "@/api/GetUser";
 import { softDelete, hardDelete } from "@/api/DeleteUser";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   onHandleUpdate,
   onHandleUpdatePassword,
@@ -31,12 +33,22 @@ import {
   SecondaryBtn,
   DangerBtn,
 } from "@/components/ButtonComponent";
-import Image from "next/image";
 import { InputComponent } from "@/components/InputComponent";
-import { stringify } from "postcss";
 export default function User() {
   const { user, setUser } = useContext(UserContext);
   const Router = useRouter();
+  const succes_notify = (message="") => {
+
+    toast.success(`${message}!`, {
+      position: "bottom-right"
+    });
+  }
+
+  const error_notify = (message="") => {
+    toast.error(`${message}!`, {
+      position: "bottom-right"
+    });
+  }
   const [userData, setUserData] = useState({});
   const [updateProfile, setUpdateProfile] = useState(false);
   const [updatePassword, setUpdatePassword] = useState(false);
@@ -80,7 +92,7 @@ export default function User() {
     const formattedDate = selectedDate.toISOString().slice(0, 10);
     setUpdateUser({ ...updateUser, birthdate: formattedDate });
   };
-
+ 
   useEffect(() => {
     const fetchUser = async () => {
       
@@ -109,6 +121,7 @@ export default function User() {
 
   const onhandleLogout = () => {
     localStorage.removeItem("authToken");
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     Router.push("/Login");
   };
   const onHandleCancel = () => {
@@ -137,18 +150,20 @@ export default function User() {
       });
 
       if (response.ok) {
+
+        succes_notify("Profile Updated");
         setUpdateProfile(false);
       } else {
-        console.error("Error:", response.statusText);
+        error_notify("Something went wrong");
       }
     } catch (error) {
-      console.error("Error:", error);
+        error_notify("Something went wrong");
     }
   };
   const onHandleUpdatePassword = async () => {
     try {
       if (password123 !== passwordConfirm123) {
-        alert("Las contraseñas no coinciden");
+        error_notify("Passwords do not match");
         return;
       }
       const token = localStorage.getItem("authToken");
@@ -164,11 +179,14 @@ export default function User() {
       });
 
       if (response.ok) {
+        succes_notify("Password Updated");
         setUpdatePassword(false);
       } else {
+        error_notify("Something went wrong");
         console.error("Error:", response.statusText);
       }
-    } catch (error) {
+  } catch (error) {
+    error_notify("Something went wrong");
       console.error("Error:", error);
     }
   };
@@ -180,8 +198,10 @@ export default function User() {
   const onHandleDeactivateUser = async () => {
     const UserDelflag = await softDelete();
     if (UserDelflag) {
+      succes_notify("User Deleted");
       onhandleLogout();
     } else {
+      error_notify("Something went wrong");
       alert("Error al borrar usuario");
     }
   };
@@ -189,17 +209,20 @@ export default function User() {
   const onHandleDeleteUser = async () => {
     const UserDelflag = await hardDelete();
     if (UserDelflag) {
+      succes_notify("User Deleted");
       onhandleLogout();
     } else {
+      error_notify("Something went wrong");
       alert("Error al borrar usuario");
     }
   };
   const onHandleAdminRole = async () => {
     const userRoleFlag = await onHandleUpdateRole();
     if (userRoleFlag) {
-      alert("Rol actualizado");
+      succes_notify("Rol Updated");
       setRol("admin");
     } else {
+      error_notify("Something went wrong");
       alert("Error al actualizar rol");
     }
   };
@@ -474,6 +497,8 @@ export default function User() {
               </CardComponent>
             </div>
           </div>
+
+          <ToastContainer />
         </ContainerComponent>
       </div>
     </>

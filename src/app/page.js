@@ -14,7 +14,7 @@ export default function Home() {
   const userFlag = async () => {
     
     const user = await getUser();
-    if (user.length !== 0) {
+    if (user) {
       setUserExist(true);
     }
     };

@@ -4,46 +4,40 @@ import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { InputComponent, InputSubmit } from "@/components/InputComponent";
-import {
-  PrimaryBtn,
-  SecondaryBtn,
-  ghostBtn,
-} from "@/components/ButtonComponent";
+import LoginAuth from "../api/Login";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CardComponent from "@/components/CardComponent";
 import ContainerComponent from "@/components/ContainerComponent";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { user } = useContext(UserContext);
+  const succes_notify = (message="") => {
+    
+    toast.success(`User ${message} Successfully!`, {
+      position: "bottom-right"
+    });
+  };
+  
+  const error_notify = (message="") => {
+    toast.error(`${message}!`, {
+      position: "bottom-right"
+    });
+  
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Handle successful login
-        const token = data.token;
-
-        document.cookie = `token=${token}`; 
-
-        localStorage.setItem("authToken", token);
-        router.push("/User");
-      } else {
-        // Handle login failure
-        console.error("Login failed");
-      }
-    } catch (error) {
-      console.error("Error:", error);
+    const response = await LoginAuth(email, password);
+    console.log(response)
+    if (response.status === 200) {
+      console.log(response.status)
+      succes_notify("Logged in");
+      router.push("/User");
+    } else {
+      console.log(response.status + 'asd')
+      error_notify("Login failed");
     }
   };
   return (
@@ -54,7 +48,9 @@ export default function Login() {
         image="https://img.logoipsum.com/243.svg"
       >
         <form onSubmit={handleSubmit}>
-          <label htmlFor="email" className="">Login</label>
+          <label htmlFor="email" className="">
+            Login
+          </label>
           <InputComponent
             id="email"
             type="email"
@@ -71,6 +67,7 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <InputSubmit value="Login" className="max-w-md mt-2 mb-2" />
+          <ToastContainer />
           <div className="text-center w-full  mt-2 mb-2">
             <Link
               className="text-blue-500 text-sm text-center w-full"

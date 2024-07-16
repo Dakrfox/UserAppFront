@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.left{
+  height: 200px;
+  width: 200px;
+}
+.sidebar {
+    /* ... other styles */
+    width: 250px; /* Initial width */
+    transition: width 0.3s ease-in-out; /* Add a transition */
+  }
+  
+  .sidebar.hidden {
+    width: 0; /* Hidden state width */
+  }

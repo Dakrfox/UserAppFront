@@ -308,7 +308,7 @@ export default function User() {
               onClick={() => Router.push("/")}
             />
           </a>
-          <a href="https://github.com/valentinocorrea/next-userapp">
+          <a href="https://dakrfox.github.io/UserAppJSDOC/">
             <MenuItem
               icon={<CgFileDocument size={20} />}
               text="Documentation"

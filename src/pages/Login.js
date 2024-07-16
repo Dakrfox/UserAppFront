@@ -9,6 +9,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardComponent from "@/components/CardComponent";
 import ContainerComponent from "@/components/ContainerComponent";
+/**
+ * Handles the submission of the login form, authenticates the user, and redirects based on the response status.
+ *
+ * @param {Event} e - The submit event object.
+ * @return {void} No return value.
+ */
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,15 +25,28 @@ export default function Login() {
     });
   };
 
+  /**
+   * A function that notifies the user about an error.
+   *
+   * @param {string} message - The error message to display.
+   * @return {void} No return value.
+   */
   const error_notify = (message = "") => {
     toast.error(`${message}!`, {
       position: "bottom-right",
     });
   };
 
+/**
+ * Handles the submission of the login form, authenticates the user, and redirects based on the response status.
+ *
+ * @param {Event} e - The submit event object.
+ * @return {Promise<void>} No return value.
+ */
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await LoginAuth(email, password);
+    
     if (response.status === 200) {
       succes_notify("Logged in");
       router.push("/User");

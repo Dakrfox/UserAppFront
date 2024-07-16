@@ -7,21 +7,48 @@ import getUser from "@/api/GetUser";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+/**
+ * Asynchronously checks if a user exists by fetching the user data using the `getUser` function.
+ * If the user exists, sets the `userExist` state to `true`.
+ *
+ * @return {Promise<void>} A promise that resolves when the check is complete.
+ */
 export default function Home() {
   const [userExist, setUserExist] = useState(false);
   const router = useRouter();
+  /**
+   * Asynchronously checks if a user exists by fetching the user data using the `getUser` function.
+   * If the user exists, sets the `userExist` state to `true`.
+   *
+   * @return {Promise<void>} A promise that resolves when the check is complete.
+   */
   const userFlag = async () => {
     const user = await getUser();
     if (user) {
       setUserExist(true);
     }
   };
+  /**
+   * Navigates to the login page.
+   *
+   * @return {void} No return value.
+   */
   const goToLogin = () => {
     router.push("/Login");
   };
+  /**
+   * Navigates to the registration page.
+   *
+   * @return {void} No return value.
+   */
   const goToRegister = () => {
     router.push("/Register");
   };
+  /**
+   * Navigates to the dashboard page.
+   *
+   * @return {void} No return value.
+   */
   const goToDashboard = () => {
     router.push("/User");
   };

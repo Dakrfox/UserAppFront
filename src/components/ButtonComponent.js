@@ -19,8 +19,16 @@ function PrimaryBtn({ value, className, ...buttonProps }) {
   );
 }
 
+/**
+ * Renders a secondary button component.
+ *
+ * @param {Object} props - The properties of the button.
+ * @param {string} props.value - The value displayed on the button.
+ * @param {string} props.className - Additional classes for styling.
+ * @param {Object} props.buttonProps - Additional properties for the button element.
+ * @return {JSX.Element} The secondary button component.
+ */
 function SecondaryBtn({ value, className, ...buttonProps }) {
-  /** */
   return (
     <button
       {...buttonProps}
@@ -31,8 +39,15 @@ function SecondaryBtn({ value, className, ...buttonProps }) {
   );
 }
 
+/**
+ * Renders a danger button component.
+ *
+ * @param {Object} value - The value displayed on the button.
+ * @param {string} className - Additional classes for styling.
+ * @param {Object} buttonProps - Additional properties for the button element.
+ * @return {JSX.Element} The danger button component.
+ */
 function DangerBtn({ value, className, ...buttonProps }) {
-  /** */
   return (
     <button
       {...buttonProps}

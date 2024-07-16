@@ -1,5 +1,16 @@
 import React from "react";
 
+/**
+ * Renders a card component with a title, description, image, and children.
+ *
+ * @param {Object} props - The properties for the card component.
+ * @param {string} props.title - The title of the card.
+ * @param {string} props.description - The description of the card.
+ * @param {string} props.image - The URL of the image to display in the card.
+ * @param {ReactNode} props.children - The content to display inside the card.
+ * @param {string} props.className - Additional CSS classes to apply to the card.
+ * @return {ReactElement} The rendered card component.
+ */
 export default function CardComponent({
   title,
   description,

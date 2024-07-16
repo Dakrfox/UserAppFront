@@ -11,6 +11,12 @@ import LoginAuth from "@/api/Login";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+/**
+ * Handles the form submission for user registration including validation, API call, and success/error notifications.
+ *
+ * @param {Event} e - The form submission event.
+ * @return {void}
+ */
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,11 +31,24 @@ export default function Register() {
     });
   };
 
+  /**
+   * Notifies the user about an error.
+   *
+   * @param {string} message - The error message to display.
+   * @return {void} No return value.
+   */
   const error_notify = (message = "") => {
     toast.error(`${message}!`, {
       position: "bottom-right",
     });
   };
+  /**
+   * Handles the form submission, validates form data, sends a POST request to create a new user,
+   * logs in the user if successful, and redirects to the User page.
+   *
+   * @param {Event} e - The form submission event.
+   * @return {void} No return value.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

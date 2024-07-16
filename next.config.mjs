@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    SECRETKEY:"A6GB^!&1feH3V5%LdQU"
+  },
   images: {
     remotePatterns: [
       {

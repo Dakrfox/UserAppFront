@@ -1,13 +1,21 @@
 import React from "react";
 
+
+/**
+ * Renders an input component with customizable styling and attributes.
+ *
+ * @param {Object} props - The properties for the input element.
+ * @param {string} props.className - Additional classes for styling.
+ * @param {string} props.id - The ID of the input element.
+ * @param {string} props.type - The type of the input element.
+ * @param {string} props.placeholder - The placeholder text for the input element.
+ * @param {function} props.onChange - The event handler for the input change event.
+ * @param {string} props.value - The value of the input element.
+ * @param {boolean} props.disabled - Whether the input element is disabled or not.
+ * @return {JSX.Element} The input component.
+ */
 function InputComponent(props) {
-  /**inputs for
-   * Text
-   * Email
-   * Password
-   * Number
-   *  Date
-   */
+ 
   return (
     <>
       <div className="">
@@ -31,6 +39,15 @@ function InputComponent(props) {
   );
 }
 
+/**
+ * Renders a submit input element with customizable styling and attributes.
+ *
+ * @param {Object} props - The properties for the input element.
+ * @param {string} props.className - Additional classes for styling.
+ * @param {string} props.id - The ID of the input element.
+ * @param {string} props.value - The value displayed on the input element.
+ * @return {JSX.Element} The submit input element.
+ */
 function InputSubmit(props) {
   return (
     <>

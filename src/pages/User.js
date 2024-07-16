@@ -36,7 +36,17 @@ import {
   DangerBtn,
 } from "@/components/ButtonComponent";
 import { InputComponent } from "@/components/InputComponent";
+/**
+ * Renders the User component which displays user information and allows for
+ * updating user data. It also provides functionality for logging out and 
+ * deleting the user account. The component fetches user data from the server
+ * and updates the user context with the fetched data. The component also 
+ * handles password updates and role updates.
+ *
+ * @return {JSX.Element} The rendered User component
+ */
 export default function User() {
+  const SECRETKEY = process.env.SECRETKEY;
   const { user, setUser } = useContext(UserContext);
   const Router = useRouter();
   const succes_notify = (message = "") => {
@@ -95,6 +105,11 @@ export default function User() {
   };
 
   useEffect(() => {
+    /**
+     * Function to fetch user data and update the state with the retrieved information.
+     *
+     * @return {Promise<void>} No return value explicitly mentioned.
+     */
     const fetchUser = async () => {
       const data = await getUser();
       setUserData(data);
@@ -117,9 +132,13 @@ export default function User() {
       const TSlogin = jwt.decode(storedToken).TimeStamp;
       setLastLogin(new Date(TSlogin));
     }
+    /**
+     * A function to generate an authentication token expiration.
+     *
+     */
     const expToken = () => {
       const token = localStorage.getItem("authToken");
-      const expiration_date = jwt.decode(token, "miClaveSecreta").exp;
+      const expiration_date = jwt.decode(token, SECRETKEY).exp;
       setTimeout(
         () => {
           onhandleLogout();
@@ -130,12 +149,22 @@ export default function User() {
     expToken();
   }, []);
 
+  /**
+   * A function to handle user logout by removing authToken, expiring the token cookie, and redirecting to the login page.
+   *
+   * @return {void} No return value
+   */
   const onhandleLogout = () => {
     localStorage.removeItem("authToken");
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     Router.push("/Login");
   };
 
+  /**
+   * A function to handle cancellation actions.
+   *
+   * @return {void} No return value explicitly mentioned.
+   */
   const onHandleCancel = () => {
     setUpdateUser({
       name: userData.name,
@@ -147,10 +176,16 @@ export default function User() {
     });
     setUpdateProfile(false);
   };
+  /**
+   * A function to handle updating user data.
+   *
+   * @param {Object} userUpdateData - The data to update the user profile
+   * @return {void} No explicit return value
+   */
   const onHandleUpdate = async (userUpdateData) => {
     try {
       const token = localStorage.getItem("authToken");
-      const decoded = jwt.verify(token, "miClaveSecreta");
+      const decoded = jwt.verify(token, SECRETKEY);
       const userId = decoded.userId;
       const response = await fetch(`http://localhost:3000/users/${userId}`, {
         method: "PATCH",
@@ -171,6 +206,11 @@ export default function User() {
       error_notify("Something went wrong");
     }
   };
+/**
+ * Updates the user's password.
+ *
+ * @return {Promise<void>} A promise that resolves when the password is updated successfully.
+ */
   const onHandleUpdatePassword = async () => {
     try {
       if (password123 !== passwordConfirm123) {
@@ -178,7 +218,7 @@ export default function User() {
         return;
       }
       const token = localStorage.getItem("authToken");
-      const decoded = jwt.verify(token, "miClaveSecreta");
+      const decoded = jwt.verify(token, SECRETKEY);
       const userId = decoded.userId;
       const response = await fetch(`http://localhost:3000/users/${userId}`, {
         method: "PATCH",
@@ -201,11 +241,21 @@ export default function User() {
       console.error("Error:", error);
     }
   };
+/**
+ * Resets the password fields and hides the password update form.
+ *
+ * @return {void} No return value.
+ */
   const onHandleCancelPwd = () => {
     setPassword123("");
     setPasswordConfirm123("");
     setUpdatePassword(false);
   };
+  /**
+   * Handles the deactivation of a user.
+   *
+   * @return {Promise<void>} Promise that resolves once the deactivation is handled.
+   */
   const onHandleDeactivateUser = async () => {
     const UserDelflag = await softDelete();
     if (UserDelflag) {
@@ -217,6 +267,11 @@ export default function User() {
     }
   };
 
+  /**
+   * Asynchronously handles the deletion of a user.
+   *
+   * @return {Promise<void>} Promise that resolves once the deletion is handled.
+   */
   const onHandleDeleteUser = async () => {
     const UserDelflag = await hardDelete();
     if (UserDelflag) {
@@ -227,6 +282,11 @@ export default function User() {
       alert("Error al borrar usuario");
     }
   };
+  /**
+   * Asynchronously handles the admin role based on the user role flag.
+   *
+   * @return {void} No return value.
+   */
   const onHandleAdminRole = async () => {
     const userRoleFlag = await onHandleUpdateRole();
     if (userRoleFlag) {

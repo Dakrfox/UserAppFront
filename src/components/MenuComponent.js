@@ -4,6 +4,13 @@ import { UserContext } from "@/context/UserContext";
 
 import Avatar from "react-avatar";
 const sidebarContext = createContext();
+/**
+ * Renders a menu component with a sidebar and user information.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {ReactNode} props.children - The content to be rendered inside the menu.
+ * @return {ReactElement} The rendered menu component.
+ */
 export default function MenuComponent({ children }) {
   const [open, setOpen] = useState(false);
   const { user } = useContext(UserContext);
@@ -59,6 +66,16 @@ export default function MenuComponent({ children }) {
   );
 }
 
+/**
+ * Renders a single menu item with an icon, text, and optional alert indicator.
+ *
+ * @param {Object} props - The properties for the menu item.
+ * @param {ReactNode} props.icon - The icon to display.
+ * @param {string} props.text - The text to display.
+ * @param {boolean} props.active - Whether the menu item is active.
+ * @param {boolean} props.alert - Whether to display an alert indicator.
+ * @return {JSX.Element} The rendered menu item.
+ */
 export function MenuItem({ icon, text, active, alert }, props) {
   const { open } = useContext(sidebarContext);
   return (
